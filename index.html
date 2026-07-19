@@ -797,20 +797,51 @@ function saveLeaderboardEntry(entry){
   list.sort((a,b) => b.score - a.score);
   localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list.slice(0, 50)));
 }
-function renderLeaderboard(){
-  const list = loadLeaderboard();
-  const rows = list.length
-    ? list.map((e,i) => `<tr><td>${i+1}</td><td>${escapeHtml(e.name)}</td><td>${e.score}/${e.maxScore}</td><td>${escapeHtml(e.date)}</td></tr>`).join("")
-    : `<tr><td colspan="4" style="text-align:center;">No scores yet on this device.</td></tr>`;
+async function renderLeaderboard(){
   cardEl.innerHTML = `
     <div class="stage-title" style="justify-content:center">Leaderboard</div>
-    <p style="text-align:center; font-size:15px; color:#8a7350;">Scores are saved on this device only.</p>
-    <table class="leaderboard-table">
+    <p style="text-align:center; font-size:15px; color:#8a7350;" id="lbStatus">Loading class leaderboard...</p>
+    <table class="leaderboard-table" id="lbTable" style="display:none;">
       <thead><tr><th>#</th><th>Name</th><th>Score</th><th>Date</th></tr></thead>
-      <tbody>${rows}</tbody>
+      <tbody id="lbBody"></tbody>
     </table>
     <div class="btn-row" style="justify-content:center"><button class="btn-gold" onclick="renderFront()">Back</button></div>
   `;
+
+  let rows = null;
+  let isLive = false;
+  if (APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes("PASTE_YOUR")){
+    try {
+      const res = await fetch(APPS_SCRIPT_URL + "?action=leaderboard");
+      const text = await res.text();
+      const data = JSON.parse(text);
+      if (Array.isArray(data)){
+        rows = data;
+        isLive = true;
+      }
+    } catch (err) {
+      rows = null;
+    }
+  }
+
+  if (!rows){
+    rows = loadLeaderboard().map(e => ({ name: e.name, score: e.score, date: e.date }));
+  }
+
+  // The card may have been re-rendered (user navigated away) before the fetch resolved.
+  const statusEl = document.getElementById('lbStatus');
+  const tableEl = document.getElementById('lbTable');
+  const bodyEl = document.getElementById('lbBody');
+  if (!tableEl) return;
+
+  statusEl.textContent = isLive
+    ? "Live class leaderboard — everyone who has saved results."
+    : "Couldn't reach the shared leaderboard — showing scores saved on this device only.";
+
+  bodyEl.innerHTML = rows.length
+    ? rows.slice(0,20).map((e,i) => `<tr><td>${i+1}</td><td>${escapeHtml(e.name)}</td><td>${e.score}</td><td>${escapeHtml(e.date || "")}</td></tr>`).join("")
+    : `<tr><td colspan="4" style="text-align:center;">No scores yet.</td></tr>`;
+  tableEl.style.display = "";
 }
 
 /* ---------------------------------------------------
