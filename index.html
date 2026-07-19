@@ -331,12 +331,12 @@ const missions = [
     vocabHint: "Target vocabulary: itinerary",
     maxPoints: 15,
     choices: [
-      { tier:"best", points:15, text:"Hello! Thank you for reaching out. Yes, we would be happy to help you book a tour for 4 people next weekend. I can prepare a full itinerary for you shortly.",
-        feedback:"The customer is delighted! Polite opening, correct grammar (‘help’, not ‘helps’), and you used ‘itinerary’ naturally." },
-      { tier:"okay", points:8, text:"Hi, yes we can help you book a tour for 4 people.",
-        feedback:"The customer is satisfied — grammar is correct, but the reply is plain. It's missing a warm opening and the word ‘itinerary’." },
-      { tier:"rude", points:0, text:"Yes we helps you. Wait for the itinerary.",
-        feedback:"The customer is upset! ‘Helps’ is a grammar mistake (should be ‘help’), and the tone is curt, not polite." }
+      { tier:"best", points:15, text:"Hello! Thank you for reaching out — yes, we can definitely help you book a tour for 4 people next weekend. I'll send over the itinerary shortly.",
+        feedback:"The customer is delighted! It directly confirms yes, fixes ‘helps’ → ‘help’, and uses ‘itinerary’ naturally." },
+      { tier:"okay", points:8, text:"Thank you for your message! Before booking, could you let us know your preferred pickup location and time?",
+        feedback:"The customer is a little unsure — this is polite and grammatically fine, but it never actually confirms you can help, and skips ‘itinerary’ entirely." },
+      { tier:"rude", points:0, text:"Hi there! We loves helping families plan their perfect getaway, and next weekend is one of our busiest times, so we will try our best to see what we can maybe do for you and your group!",
+        feedback:"The customer is confused! Despite being long and cheerful, it has a grammar mistake (‘We loves’) and never gives a clear yes — ‘try our best’ and ‘maybe’ leave the booking unconfirmed." }
     ]
   },
   {
@@ -348,12 +348,12 @@ const missions = [
     vocabHint: "Target vocabulary: departs / departure",
     maxPoints: 15,
     choices: [
-      { tier:"best", points:15, text:"Yes, the tour includes lunch, and it departs at 9:00 AM from the hotel lobby.",
-        feedback:"The customer is delighted! Correct grammar (‘includes’), a clear time expression, and you used ‘departs at’." },
-      { tier:"okay", points:8, text:"Yes lunch is included. It start at 9am.",
-        feedback:"The customer is satisfied with the information, but ‘it start’ is a grammar slip and ‘departs’ wasn't used." },
-      { tier:"rude", points:0, text:"Yes. Read the itinerary yourself.",
-        feedback:"The customer is upset! That's dismissive — no useful information and no vocabulary used." }
+      { tier:"best", points:15, text:"Yes, lunch is included, and the tour departs at 9:00 AM from the hotel lobby.",
+        feedback:"The customer is delighted! Both questions are answered directly, with correct grammar and ‘departs at’ used properly." },
+      { tier:"okay", points:8, text:"Great question! Our tours are designed to give you the most enjoyable experience possible, and lunch is always part of the package.",
+        feedback:"The customer is still waiting — this sounds nice and confirms lunch, but it completely ignores the departure time question." },
+      { tier:"rude", points:0, text:"It start at 9am and lunch included too, don't worry about it!",
+        feedback:"The customer notices the sloppiness — both answers are technically there, but ‘it start’ repeats the grammar mistake and the tone is too casual for a professional reply." }
     ]
   },
   {
@@ -365,12 +365,12 @@ const missions = [
     vocabHint: "Target vocabulary: deposit (with amount or percentage)",
     maxPoints: 15,
     choices: [
-      { tier:"best", points:15, text:"Thank you! I can confirm you have 15 people in your group. The deposit is 20% of the total price, payable within 3 days.",
-        feedback:"The customer is delighted! You corrected ‘you have’, and clearly stated the deposit percentage." },
-      { tier:"okay", points:8, text:"15 people, deposit is 20%.",
-        feedback:"The customer is satisfied with the numbers, but the reply is too blunt and doesn't correct the grammar." },
-      { tier:"rude", points:0, text:"You has 15 people? Ok just pay deposit.",
-        feedback:"The customer is upset! ‘You has’ repeats the grammar mistake, and the tone is dismissive." }
+      { tier:"best", points:15, text:"Thank you! You have 15 people in your group, and the deposit required is 20% of the total price.",
+        feedback:"The customer is delighted! ‘You have’ corrects the grammar, and the deposit amount is stated clearly." },
+      { tier:"okay", points:8, text:"Thanks so much for letting us know the group size — we'll get back to you shortly with the full pricing breakdown and deposit details!",
+        feedback:"The customer is still waiting — warm and well-written, but it never actually says how much the deposit is, which was the whole question." },
+      { tier:"rude", points:0, text:"You has 15 people, deposit needed.",
+        feedback:"The customer is annoyed! ‘You has’ repeats the grammar mistake, and there's still no actual deposit amount given." }
     ]
   },
   {
@@ -382,12 +382,12 @@ const missions = [
     vocabHint: "Target vocabulary: valid",
     maxPoints: 15,
     choices: [
-      { tier:"best", points:15, text:"Thank you for the kind words! Our guides are friendly and experienced. Please note your passport must be valid for at least 6 months, so we recommend renewing it before the trip.",
-        feedback:"The customer is delighted! You corrected ‘guides are’, explained the requirement using ‘valid’, and stayed reassuring." },
-      { tier:"okay", points:8, text:"Guides are friendly, thanks. Your passport needs to be valid 6 months.",
-        feedback:"The customer is satisfied with the correction and the information, though the tone could be warmer." },
-      { tier:"rude", points:0, text:"The guide is friendly, yes. 3 months is not enough, sorry.",
-        feedback:"The customer is upset! ‘The guide is’ is still wrong (should be ‘guides are’), and the passport rule wasn't explained." }
+      { tier:"best", points:15, text:"Thank you! Our guides are friendly and experienced, and please note your passport must be valid for at least 6 months before travel.",
+        feedback:"The customer is delighted! ‘Guides are’ is corrected, and the passport rule is explained clearly using ‘valid’." },
+      { tier:"okay", points:8, text:"We're so glad to hear that! Our whole team works hard to make every trip special, and we want to make sure everything goes smoothly for you.",
+        feedback:"The customer is still worried — this is warm and correctly written, but it never answers the passport question at all." },
+      { tier:"rude", points:0, text:"The guide is friendly yes. 3 months should be fine probably.",
+        feedback:"The customer got the wrong information! ‘The guide is’ is still wrong (should be ‘guides are’), and 3 months is actually NOT enough — most policies require 6 months' validity." }
     ]
   },
   {
@@ -399,12 +399,12 @@ const missions = [
     vocabHint: "Target vocabulary: assist / assistance",
     maxPoints: 15,
     choices: [
-      { tier:"best", points:15, text:"Please don't worry, we will assist you right away. I'm arranging help for your friend who feels sick, and I'll monitor your flight delay closely.",
-        feedback:"The customer is delighted! Calm, reassuring, corrected ‘feels sick’, and used ‘assist’ clearly." },
-      { tier:"okay", points:8, text:"We will assist you. Don't worry.",
-        feedback:"The customer is satisfied it's being handled, but the reply is short and doesn't correct ‘feel sick’." },
-      { tier:"rude", points:0, text:"That's not our problem, you must wait.",
-        feedback:"The customer is upset! This is dismissive and unhelpful during an emergency." }
+      { tier:"best", points:15, text:"Please don't worry — we will assist you right away. I'm arranging help for your friend who feels sick, and I'll keep monitoring your flight delay.",
+        feedback:"The customer is delighted! Calm and reassuring, fixes ‘feel’ → ‘feels’, and uses ‘assist’ with real, concrete help offered." },
+      { tier:"okay", points:8, text:"Flight delays can definitely be stressful, and we completely understand how you must be feeling right now during this difficult situation.",
+        feedback:"The customer feels heard, but not helped — this is sympathetic and grammatically correct, but offers zero actual assistance or next steps for the sick friend." },
+      { tier:"rude", points:0, text:"That happens sometimes. Hope your friend feel better soon!",
+        feedback:"The customer is unimpressed! ‘Friend feel’ is still ungrammatical, the tone is dismissive, and no real help is offered." }
     ]
   }
 ];
@@ -413,17 +413,17 @@ const finalBoss = {
   icon: "\u{1F3C6}",
   title: "The Difficult Customer",
   skill: "Final Challenge",
-  situation: "This customer combines everything you have learned. Choose the reply that covers group size, transfers, schedule, documents and booking professionally.",
+  situation: "This customer combines everything you have learned. Choose the reply that actually answers every part of their message — correctly.",
   customer: "Hello. We are a group of 12 people. Could you tell me if your package has airport transfers? The tour is next Friday. One guest's passport expires in four months. Can we change the booking date? Can you send the itinerary?",
   vocabHint: "Target vocabulary: transfer, itinerary, confirm, valid, deposit",
   maxPoints: 25,
   choices: [
-    { tier:"best", points:25, text:"Thank you for reaching out! To confirm, you have 12 people in your group. Yes, our package includes airport transfers. Please note your guest's passport should be valid for at least 6 months, so kindly advise them to renew it. We can certainly help change your booking date, and I will send the itinerary right away. We look forward to hosting you!",
-      feedback:"The customer is delighted! Every point was addressed — group size, transfers, passport validity, booking change, itinerary, and a professional closing." },
-    { tier:"okay", points:12, text:"You have 12 people, transfers are included, and the itinerary will be sent. About the passport, please check the requirement. We can change the date too.",
-      feedback:"The customer is satisfied — most points are covered, but the passport advice is vague and the closing isn't very polished." },
-    { tier:"rude", points:0, text:"12 people, ok. Transfers yes. Passport your problem. Date change maybe. Bye.",
-      feedback:"The customer is furious! That's unprofessional and dismissive, especially about the passport issue." }
+    { tier:"best", points:25, text:"Thank you for reaching out! You have 12 people confirmed, our package includes airport transfers, and your guest's passport should be valid for at least 6 months so we recommend renewing it. We're happy to change your booking date, and I'll send the itinerary right away.",
+      feedback:"The customer is delighted! Every single question was answered correctly — group size, transfers, passport validity, date change, and itinerary." },
+    { tier:"okay", points:12, text:"Thanks for your detailed message! We truly appreciate loyal customers like you, and our team is fully committed to making sure your trip exceeds all expectations from start to finish.",
+      feedback:"The customer is frustrated — this is long, warm, and grammatically perfect, but it doesn't answer a single one of the five questions that were actually asked." },
+    { tier:"rude", points:0, text:"12 people ok. Transfers yes we have. Passport 4 months maybe fine. Date change contact office. Itinerary later.",
+      feedback:"The customer is furious! The grammar is broken throughout, the passport advice is wrong (4 months is not enough), and the date-change request is deflected instead of handled." }
   ]
 };
 
@@ -523,6 +523,17 @@ function renderMap(){
   `;
 }
 
+function shuffleArray(arr){
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let currentChoices = [];
+
 function enterMission(i){
   state.activeMission = i;
   state.screen = "mission";
@@ -532,6 +543,7 @@ function enterMission(i){
 function renderMission(){
   const m = allStages[state.activeMission];
   const letters = ["A","B","C"];
+  currentChoices = shuffleArray(m.choices);
   cardEl.innerHTML = `
     <div class="stage-title">${m.icon} Mission ${state.activeMission+1}: ${m.title}</div>
     <div class="situation"><b>Situation:</b> ${m.situation}</div>
@@ -544,7 +556,7 @@ function renderMission(){
     </div>
     <div class="vocab-hint">${m.vocabHint}</div>
     <div class="choices" id="choices">
-      ${m.choices.map((c,idx) => `<button class="choice-btn" data-idx="${idx}" onclick="pickChoice(${idx})"><span class="choice-letter">${letters[idx]}</span>${c.text}</button>`).join("")}
+      ${currentChoices.map((c,idx) => `<button class="choice-btn" data-idx="${idx}" onclick="pickChoice(${idx})"><span class="choice-letter">${letters[idx]}</span>${c.text}</button>`).join("")}
     </div>
     <div class="feedback" id="feedback"></div>
   `;
@@ -552,7 +564,7 @@ function renderMission(){
 
 function pickChoice(idx){
   const m = allStages[state.activeMission];
-  const choice = m.choices[idx];
+  const choice = currentChoices[idx];
 
   document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
   document.querySelector(`.choice-btn[data-idx="${idx}"]`).classList.add(
