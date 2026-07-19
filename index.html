@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operation Happy Tour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#f6ecd6;
+    --parchment-dark:#ecdcb8;
+    --wood:#7a4a26;
+    --wood-dark:#5a3419;
+    --wood-light:#9c6a3e;
+    --ink:#3b2a1a;
+    --forest:#3f7a4a;
+    --forest-dark:#2c5934;
+    --sky:#7fb8d9;
+    --gold:#e0a83e;
+    --heart:#e2636b;
+    --paper-line:#d8c9a3;
+    --shadow: rgba(59,42,26,0.25);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Nunito', sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 10%, #cfe8c9 0%, transparent 45%),
+      radial-gradient(circle at 85% 15%, #bfe0ee 0%, transparent 40%),
+      linear-gradient(180deg,#e8f3e2 0%, #dcefe0 40%, #cfe6d6 100%);
+    padding:24px 14px 60px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+
+  /* Wooden sign header */
+  .sign{
+    background:linear-gradient(180deg,var(--wood-light),var(--wood));
+    border:6px solid var(--wood-dark);
+    border-radius:14px;
+    padding:16px 22px;
+    text-align:center;
+    box-shadow:0 6px 0 var(--wood-dark), 0 10px 18px var(--shadow);
+    position:relative;
+  }
+  .sign h1{
+    font-family:'Baloo 2', sans-serif;
+    color:#fff6e2;
+    font-size:clamp(22px,4.5vw,32px);
+    margin:0 0 4px;
+    text-shadow:0 2px 0 var(--wood-dark);
+    letter-spacing:0.5px;
+  }
+  .sign .sub{
+    color:#ffe9c2;
+    font-weight:700;
+    font-size:14px;
+  }
+  .leaf{position:absolute; font-size:20px; top:-10px;}
+  .leaf.l{left:14px;} .leaf.r{right:14px;}
+
+  /* Reputation bar */
+  .rep{
+    margin-top:14px;
+    background:var(--parchment);
+    border:3px solid var(--paper-line);
+    border-radius:12px;
+    padding:10px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-weight:700;
+  }
+  .rep .stars{color:var(--gold); letter-spacing:2px; font-size:18px;}
+  .rep .hearts{color:var(--heart); letter-spacing:2px; font-size:16px;}
+  .rep .label{font-family:'Baloo 2'; font-size:14px; color:var(--wood-dark);}
+
+  /* Map progress track */
+  .track{
+    margin-top:14px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:4px;
+  }
+  .node{
+    flex:1 0 90px;
+    background:var(--parchment);
+    border:3px solid var(--paper-line);
+    border-radius:10px;
+    text-align:center;
+    padding:8px 4px;
+    font-size:12px;
+    font-weight:700;
+    color:#a3906a;
+    transition:all .25s;
+  }
+  .node .icon{font-size:20px; display:block; margin-bottom:2px;}
+  .node.active{
+    background:var(--forest);
+    color:#fff;
+    border-color:var(--forest-dark);
+    transform:translateY(-3px);
+    box-shadow:0 4px 0 var(--forest-dark);
+  }
+  .node.done{
+    background:var(--gold);
+    color:#5a3d0a;
+    border-color:#b9812a;
+  }
+
+  /* Main quest card */
+  .card{
+    margin-top:18px;
+    background:var(--parchment);
+    border:4px solid var(--paper-line);
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 6px 18px var(--shadow);
+    position:relative;
+  }
+  .stage-title{
+    font-family:'Baloo 2';
+    color:var(--forest-dark);
+    font-size:20px;
+    margin:0 0 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .situation{
+    background:#fff;
+    border-left:6px solid var(--sky);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:14px;
+    margin-bottom:14px;
+    color:#4a4a4a;
+  }
+  .chat-bubble{
+    background:#fff;
+    border-radius:14px 14px 14px 2px;
+    border:2px solid var(--paper-line);
+    padding:12px 16px;
+    max-width:90%;
+    margin-bottom:16px;
+    font-size:15px;
+    line-height:1.5;
+    position:relative;
+  }
+  .chat-bubble .who{
+    font-family:'Baloo 2';
+    font-size:12px;
+    color:var(--wood);
+    display:block;
+    margin-bottom:4px;
+  }
+  .vocab-hint{
+    font-size:12px;
+    background:#fff2cf;
+    border:1px dashed var(--gold);
+    border-radius:8px;
+    padding:6px 10px;
+    display:inline-block;
+    margin-bottom:14px;
+  }
+  textarea{
+    width:100%;
+    min-height:80px;
+    border:2px solid var(--paper-line);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:'Nunito';
+    font-size:15px;
+    resize:vertical;
+    outline:none;
+  }
+  textarea:focus{border-color:var(--forest);}
+  .btn-row{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;}
+  button{
+    font-family:'Baloo 2';
+    font-size:15px;
+    border:none;
+    border-radius:10px;
+    padding:11px 20px;
+    cursor:pointer;
+    color:#fff;
+    transition:transform .12s;
+  }
+  button:active{transform:translateY(2px);}
+  .btn-send{background:var(--forest); box-shadow:0 4px 0 var(--forest-dark);}
+  .btn-send:hover{filter:brightness(1.05);}
+  .btn-next{background:var(--gold); box-shadow:0 4px 0 #a97a1f; color:#4a3407;}
+  .btn-start{background:var(--forest); box-shadow:0 4px 0 var(--forest-dark); font-size:17px; padding:14px 26px;}
+  .btn-secondary{background:var(--sky); box-shadow:0 4px 0 #4f8aab;}
+
+  .feedback{
+    margin-top:14px;
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:14px;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback ul{margin:6px 0 0; padding-left:20px;}
+  .feedback.ok{background:#e2f4e0; border:2px solid var(--forest);}
+  .feedback.warn{background:#fdecec; border:2px solid var(--heart);}
+
+  /* Start screen */
+  .start-card{text-align:center;}
+  .start-card input{
+    width:100%;
+    max-width:340px;
+    padding:10px 12px;
+    border:2px solid var(--paper-line);
+    border-radius:10px;
+    font-family:'Nunito';
+    font-size:15px;
+    margin:6px 0;
+  }
+  .field-label{font-weight:700; font-size:13px; color:var(--wood-dark); display:block; margin-top:10px;}
+
+  /* End screen */
+  .score-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin:16px 0;
+  }
+  .score-box{
+    background:#fff;
+    border:2px solid var(--paper-line);
+    border-radius:10px;
+    padding:10px;
+    text-align:center;
+  }
+  .score-box .n{font-family:'Baloo 2'; font-size:22px; color:var(--forest-dark);}
+  .score-box .l{font-size:11px; color:#8a7350; font-weight:700;}
+  .stamp{
+    font-family:'Baloo 2';
+    display:inline-block;
+    border:4px double var(--heart);
+    color:var(--heart);
+    padding:10px 18px;
+    border-radius:10px;
+    font-size:18px;
+    transform:rotate(-4deg);
+    margin:10px 0;
+  }
+  .save-status{font-size:13px; margin-top:10px; font-weight:700;}
+  footer{text-align:center; font-size:12px; color:#7a8f7a; margin-top:22px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="sign">
+    <span class="leaf l">🍃</span><span class="leaf r">🍃</span>
+    <h1>✈️ Operation Happy Tour</h1>
+    <div class="sub">Happy Journey Tours — Make Every Tourist Smile!</div>
+  </div>
+
+  <div class="rep" id="repBar">
+    <div><span class="label">Agency Rank:</span> <span class="stars" id="starDisplay">★★★★★</span> <span id="rankLabel">New Travel Agency</span></div>
+    <div class="hearts" id="heartDisplay">❤️❤️❤️❤️❤️</div>
+  </div>
+
+  <div class="track" id="track"></div>
+
+  <div class="card" id="card"></div>
+
+  <footer>Built for classroom use — Basic Grammar in Context · RMUTK</footer>
+</div>
+
+<script>
+/* ---------------------------------------------------
+   CONFIG — Apps Script /exec URL for saving results
+--------------------------------------------------- */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwy4Iuf7mP4d2gqA2dRHUpBO2PctebStWkM2eyFpg2QFSW0mVnwvqEIc_-GDmVsVeRY/exec";
+
+/* ---------------------------------------------------
+   GAME DATA
+--------------------------------------------------- */
+const missions = [
+  {
+    id: 1,
+    icon: "📩",
+    title: "Customer Enquiry",
+    skill: "Polite Communication",
+    situation: "A family of four wants a tour next weekend. Reply politely and confirm you can help.",
+    customer: "Hello. We are 4 people. Can you helps us book a tour next weekend?",
+    vocab: { word: "itinerary", prompt: "Use the word 'itinerary' somewhere in your reply." },
+    checks: [
+      { label: "Politeness pattern (Could you / Would it be possible / Please)", test: r => /\b(could you|would it be possible|please|we would be happy|we ' ?d be happy)\b/i.test(r) },
+      { label: "Correct grammar (help, not helps)", test: r => /\bhelp\b/i.test(r) && !/\bhelps\b/i.test(r) },
+      { label: "Vocabulary: itinerary", test: r => /\bitinerary\b/i.test(r) }
+    ]
+  },
+  {
+    id: 2,
+    icon: "🗓️",
+    title: "Tour Planning",
+    skill: "Schedule Master",
+    situation: "The customer wants to know if the tour includes lunch and what time it starts.",
+    customer: "Does the tour includes lunch? What time it start?",
+    vocab: { word: "departs", prompt: "Use the word 'departs' or 'departure' in your reply." },
+    checks: [
+      { label: "Correct grammar (includes lunch)", test: r => /\bincludes\b/i.test(r) },
+      { label: "Correct time expression (The tour starts / departs at...)", test: r => /\b(starts|departs)\s+at\b/i.test(r) },
+      { label: "Vocabulary: departs / departure", test: r => /\bdepart(s|ure)?\b/i.test(r) }
+    ]
+  },
+  {
+    id: 3,
+    icon: "💳",
+    title: "Booking",
+    skill: "Payment Specialist",
+    situation: "The customer asks about the deposit and total price for the group.",
+    customer: "We has 15 people. How much is deposit?",
+    vocab: { word: "deposit", prompt: "Use the word 'deposit' clearly with the correct amount or percentage." },
+    checks: [
+      { label: "Correct grammar (You have 15 people)", test: r => /\byou\s+have\b/i.test(r) },
+      { label: "Mentions a deposit percentage or amount", test: r => /\bdeposit\b/i.test(r) && /(\d+%|\$\d+|\d+\s*(baht|thb))/i.test(r) },
+      { label: "Professional, complete sentence (ends with punctuation)", test: r => /[.!]\s*$/.test(r.trim()) }
+    ]
+  },
+  {
+    id: 4,
+    icon: "🛂",
+    title: "Travel Documents",
+    skill: "Document Officer",
+    situation: "The customer's guide is described, and they ask about passport requirements.",
+    customer: "The guides is friendly. Also, my passport expires in 3 months, is it ok?",
+    vocab: { word: "valid", prompt: "Use the word 'valid' when explaining the passport requirement." },
+    checks: [
+      { label: "Correct grammar (Our guides are friendly)", test: r => /\bguides\s+are\b/i.test(r) },
+      { label: "Explains passport requirement using 'valid'", test: r => /\bvalid\b/i.test(r) },
+      { label: "Polite, reassuring tone (Thank you / We recommend / Please note)", test: r => /\b(thank you|we recommend|please note|kindly)\b/i.test(r) }
+    ]
+  },
+  {
+    id: 5,
+    icon: "🧳",
+    title: "During Trip",
+    skill: "Information Expert",
+    situation: "Flight delayed. One tourist is sick. Respond with support and next steps.",
+    customer: "Our flight is delayed and one of my friends feel sick. What should we do?",
+    vocab: { word: "assist", prompt: "Use the word 'assist' or 'assistance' in your reply." },
+    checks: [
+      { label: "Correct grammar (feels sick)", test: r => /\bfeels\b/i.test(r) },
+      { label: "Offers assistance clearly", test: r => /\bassist(ance)?\b/i.test(r) },
+      { label: "Polite, calm tone (Please don't worry / We will / Could you)", test: r => /\b(don't worry|we will|please|could you)\b/i.test(r) }
+    ]
+  }
+];
+
+const finalBoss = {
+  id: 6,
+  icon: "🏆",
+  title: "The Difficult Customer",
+  skill: "Final Challenge",
+  situation: "This customer combines everything you have learned. Reply with a complete, professional message covering group size, transfers, schedule, documents and booking.",
+  customer: "Hello. We are a group of 12 people. Could you tell me if your package has airport transfers? The tour is next Friday. One guest's passport expires in four months. Can we change the booking date? Can you send the itinerary?",
+  vocab: { word: "transfer / itinerary / confirm", prompt: "Try to use at least two key words: transfer, itinerary, confirm, valid, deposit." },
+  checks: [
+    { label: "Confirms group size correctly (You have 12 people / a group of 12)", test: r => /(you have 12|group of 12)/i.test(r) },
+    { label: "Mentions airport transfer", test: r => /\btransfer(s)?\b/i.test(r) },
+    { label: "Mentions the itinerary", test: r => /\bitinerary\b/i.test(r) },
+    { label: "Addresses the passport / document validity", test: r => /\b(valid|passport)\b/i.test(r) },
+    { label: "Polite, professional closing (Thank you / We look forward / Please let us know)", test: r => /\b(thank you|look forward|please let us know|kindly)\b/i.test(r) }
+  ]
+};
+
+const allStages = [...missions, finalBoss];
+
+/* ---------------------------------------------------
+   STATE
+--------------------------------------------------- */
+let state = {
+  name: "",
+  studentId: "",
+  currentStage: -1, // -1 = start screen
+  score: 0,
+  maxScore: 0,
+  hearts: 5,
+  startTime: null,
+  completedNodes: []
+};
+
+const cardEl = document.getElementById('card');
+const trackEl = document.getElementById('track');
+
+function renderTrack(){
+  trackEl.innerHTML = "";
+  allStages.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'node' + (i === state.currentStage ? ' active' : '') + (state.completedNodes.includes(i) ? ' done' : '');
+    div.innerHTML = `<span class="icon">${m.icon}</span>${m.title}`;
+    trackEl.appendChild(div);
+  });
+}
+
+function renderRep(){
+  const pct = state.maxScore === 0 ? 0 : state.score / state.maxScore;
+  const starCount = Math.max(1, Math.min(5, Math.ceil(pct * 5) || 1));
+  document.getElementById('starDisplay').textContent = "★".repeat(state.completedNodes.length ? starCount : 0) + "☆".repeat(5 - (state.completedNodes.length ? starCount : 0));
+  const ranks = ["New Travel Agency","Trusted Agency","Professional Agency","Premium Tour Company","Best Tour Company Award"];
+  document.getElementById('rankLabel').textContent = state.completedNodes.length ? ranks[starCount - 1] : ranks[0];
+  document.getElementById('heartDisplay').textContent = "❤️".repeat(state.hearts) + "🤍".repeat(5 - state.hearts);
+}
+
+function fmtTime(ms){
+  const totalSec = Math.floor(ms/1000);
+  const m = Math.floor(totalSec/60);
+  const s = totalSec%60;
+  return `${m}m ${s.toString().padStart(2,'0')}s`;
+}
+
+/* ---------------------------------------------------
+   SCREENS
+--------------------------------------------------- */
+function renderStart(){
+  cardEl.innerHTML = `
+    <div class="start-card">
+      <h2 class="stage-title" style="justify-content:center">👋 Welcome, new agent!</h2>
+      <p>Enter your details to begin your mission as a Tour Officer at <b>Happy Journey Tours</b>.</p>
+      <span class="field-label">Full Name</span>
+      <input type="text" id="inputName" placeholder="e.g. Somchai P.">
+      <span class="field-label">Student ID</span>
+      <input type="text" id="inputId" placeholder="e.g. 6512345678">
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn-start" onclick="startGame()">Begin Mission ✈️</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderStage(){
+  const m = allStages[state.currentStage];
+  const isLast = state.currentStage === allStages.length - 1;
+  cardEl.innerHTML = `
+    <div class="stage-title">${m.icon} Mission ${state.currentStage+1}: ${m.title}</div>
+    <div class="situation"><b>Situation:</b> ${m.situation}</div>
+    <div class="chat-bubble">
+      <span class="who">🧑 Customer</span>
+      ${m.customer}
+    </div>
+    <div class="vocab-hint">📘 Vocabulary skill: ${m.vocab.prompt}</div>
+    <textarea id="replyBox" placeholder="Write your professional reply here..."></textarea>
+    <div class="btn-row">
+      <button class="btn-send" onclick="checkReply()">Send Reply 📨</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  `;
+  document.getElementById('replyBox').focus();
+}
+
+function renderEnd(){
+  const elapsed = Date.now() - state.startTime;
+  const pct = Math.round((state.score / state.maxScore) * 100);
+  let mood = "😐 Average Trip";
+  if (pct >= 80) mood = "😄 Happy Tourists!";
+  else if (pct < 50) mood = "😡 Complaint Submitted";
+
+  cardEl.innerHTML = `
+    <div class="stage-title" style="justify-content:center">🎉 Trip Complete!</div>
+    <p style="text-align:center;">Great work, <b>${state.name}</b>! Here is your final report.</p>
+    <div style="text-align:center"><span class="stamp">${mood}</span></div>
+    <div class="score-grid">
+      <div class="score-box"><div class="n">${state.score} / ${state.maxScore}</div><div class="l">TOTAL SCORE</div></div>
+      <div class="score-box"><div class="n">${pct}%</div><div class="l">SATISFACTION</div></div>
+      <div class="score-box"><div class="n">${fmtTime(elapsed)}</div><div class="l">TIME SPENT</div></div>
+      <div class="score-box"><div class="n">${state.hearts}/5</div><div class="l">HEARTS REMAINING</div></div>
+    </div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn-secondary" onclick="submitResults()">💾 Save My Results</button>
+    </div>
+    <div class="save-status" id="saveStatus" style="text-align:center;"></div>
+  `;
+}
+
+/* ---------------------------------------------------
+   LOGIC
+--------------------------------------------------- */
+function startGame(){
+  const name = document.getElementById('inputName').value.trim();
+  const id = document.getElementById('inputId').value.trim();
+  if (!name || !id){
+    alert("Please enter both your name and student ID before starting.");
+    return;
+  }
+  state.name = name;
+  state.studentId = id;
+  state.startTime = Date.now();
+  state.currentStage = 0;
+  state.maxScore = allStages.reduce((sum, m) => sum + m.checks.length * 5, 0);
+  renderTrack();
+  renderRep();
+  renderStage();
+}
+
+function checkReply(){
+  const m = allStages[state.currentStage];
+  const reply = document.getElementById('replyBox').value;
+  if (!reply.trim()){
+    alert("Please write a reply before sending.");
+    return;
+  }
+  let passed = 0;
+  const results = m.checks.map(c => {
+    const ok = c.test(reply);
+    if (ok) passed++;
+    return { label: c.label, ok };
+  });
+
+  const gained = passed * 5;
+  state.score += gained;
+
+  if (passed === m.checks.length){
+    state.hearts = Math.min(5, state.hearts + 1);
+  } else if (passed <= Math.floor(m.checks.length/2)) {
+    state.hearts = Math.max(0, state.hearts - 1);
+  }
+
+  state.completedNodes.push(state.currentStage);
+  renderTrack();
+  renderRep();
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (passed === m.checks.length ? 'ok' : 'warn');
+  fb.innerHTML = `
+    <b>${passed}/${m.checks.length} criteria met — +${gained} points</b>
+    <ul>${results.map(r => `<li>${r.ok ? '✅' : '❌'} ${r.label}</li>`).join('')}</ul>
+    <div class="btn-row"><button class="btn-next" onclick="nextStage()">${state.currentStage === allStages.length-1 ? 'Finish Trip 🏁' : 'Continue Journey ➡️'}</button></div>
+  `;
+  document.querySelector('.btn-send').disabled = true;
+}
+
+function nextStage(){
+  state.currentStage++;
+  if (state.currentStage >= allStages.length){
+    renderEnd();
+  } else {
+    renderStage();
+  }
+}
+
+async function submitResults(){
+  const elapsedMin = ((Date.now() - state.startTime) / 60000).toFixed(2);
+  const statusEl = document.getElementById('saveStatus');
+
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")){
+    statusEl.style.color = "#a1442c";
+    statusEl.textContent = "⚠️ No Apps Script URL configured — results were not saved online. (Ask your teacher to set this up.)";
+    return;
+  }
+
+  statusEl.style.color = "#3f7a4a";
+  statusEl.textContent = "Saving...";
+
+  const payload = {
+    name: state.name,
+    studentId: state.studentId,
+    score: state.score,
+    timeSpent: elapsedMin
+  };
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload)
+    });
+    // no-cors requests return an opaque response, so we cannot confirm success directly.
+    statusEl.textContent = "✅ Results submitted! (If your teacher's sheet doesn't update, check the Apps Script deployment settings.)";
+  } catch (err) {
+    statusEl.style.color = "#a1442c";
+    statusEl.textContent = "❌ Could not reach the server. Check your internet connection and try again.";
+  }
+}
+
+/* ---------------------------------------------------
+   INIT
+--------------------------------------------------- */
+renderTrack();
+renderRep();
+renderStart();
+</script>
+</body>
+</html>
